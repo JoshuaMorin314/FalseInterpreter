@@ -1,6 +1,6 @@
 // Stack.c
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "Stack.h"
 
 // creates an empty stack
