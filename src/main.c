@@ -1,7 +1,9 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "Stack.h"
+#include "Tokenizer.h"
 
-int main(){
+void teststack(){
     Node** stack=create_stack();
     int top;
     // test push
@@ -30,6 +32,19 @@ int main(){
     printf("UNDERFLOW:\n");
     peek(stack);
     pop(stack);
+}
 
+int main(){
+    char* programstring = "Hello World!\nOther\tWords.";
+    char** hahareference = &programstring;
+
+    char* funny = (char*)malloc(50*sizeof(char));
+    funny = gettoken(hahareference);
+    while (funny != NULL) {
+        printf("%s\n", funny);
+        funny = gettoken(hahareference);
+    }
+
+    free(funny);
     return 0; 
 }
