@@ -22,4 +22,7 @@ extern int peek(Node** stack);
 // output methods
 extern void print_stack(Node** stack);
 
+// checks if empty
+extern int empty(Node** stack);
+
 #endif // STACK_H
