@@ -3,6 +3,7 @@
 #include "Stack.h"
 #include "Tokenizer.h"
 
+/*
 void teststack(){
     Node** stack=create_stack();
     int top;
@@ -33,18 +34,26 @@ void teststack(){
     peek(stack);
     pop(stack);
 }
+*/
 
 int main(){
-    char* programstring = "0 0[ß^$$47>\\58\\>&][48-\\10*+]#%[$1>][$1-]#[\\$0=~][*]#%.";
+    char* programstring = "1 67 333 09123721 839826 a:a;";
     char** hahareference = &programstring;
 
-    char* funny = (char*)malloc(10*sizeof(char));
+    Data funny;
     funny = gettoken(hahareference);
-    while (funny != NULL) {
-        printf("%s\n", funny);
+    while (funny.tag == TYPE_STR && funny.val.string != NULL || funny.tag == TYPE_INT) {
+        switch(funny.tag) {
+            case TYPE_STR:
+                printf("%s\n", funny.val.string);
+                break;
+            case TYPE_INT:
+                printf("%d\n", funny.val.integer);
+                break;
+        }
+
         funny = gettoken(hahareference);
     }
 
-    free(funny);
     return 0; 
 }
