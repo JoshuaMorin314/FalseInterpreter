@@ -11,7 +11,7 @@ Node** create_stack(){
 }
 
 // creates a new Linked List node
-Node* create_node(int value){
+Node* create_node(Data value){
     Node* node=(Node*)malloc(sizeof(Node*));
     node->value=value;
     node->next=NULL;
@@ -19,7 +19,7 @@ Node* create_node(int value){
 }
 
 // pushes value onto the stack
-void push(Node** stack,int value){
+void push(Node** stack,Data value){
     Node* top=create_node(value);
     top->next=*stack;
     *stack=top;
@@ -27,23 +27,27 @@ void push(Node** stack,int value){
 }
 
 // pops the top of the stack off
-int pop(Node** stack){
+Data pop(Node** stack){
     if(*stack==NULL){
         fprintf(stderr, "ERROR: stack underflow\n");
-        return 0xFFFFFFFF;
+        Data _;
+        _.integer = 0xFFFFFFFF;
+        return _;
     }
     Node* top=*stack;
-    int output=top->value;
+    Data output=top->value;
     *stack=top->next;
     free(top);
     return output;
 }
 
 // outputs the top stack value without popping it
-int peek(Node** stack){
+Data peek(Node** stack){
     if(*stack==NULL){
         fprintf(stderr, "ERROR: stack underflow\n");
-        return 0xFFFFFFFF;
+        Data _;
+        _.integer = 0xFFFFFFFF;
+        return _;
     }
     return (*stack)->value;
 }
