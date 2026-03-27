@@ -1,14 +1,23 @@
 #ifndef STACK_H
 #define STACK_H
 
-typedef union Data{
-    int integer;
-    char* string;
+//Implement a tagged union for data storage
+typedef enum DT{
+    TYPE_INT,
+    TYPE_STR
+} DT;
+
+typedef struct Data{
+    DT tag;
+    union {
+        int integer;
+        char* string;
+    } val;
 } Data;
 
 // linked list to hold the stack
 typedef struct Node{
-    union Data value;
+    struct Data value;
     struct Node* next;
 } Node;
 
@@ -28,6 +37,6 @@ extern Data peek(Node** stack);
 extern void print_stack(Node** stack);
 
 // checks if empty
-extern Data empty(Node** stack);
+extern int empty(Node** stack);
 
 #endif // STACK_H

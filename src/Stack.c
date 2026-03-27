@@ -31,7 +31,8 @@ Data pop(Node** stack){
     if(*stack==NULL){
         fprintf(stderr, "ERROR: stack underflow\n");
         Data _;
-        _.integer = 0xFFFFFFFF;
+        _.tag = TYPE_INT;
+        _.val.integer = 0xFFFFFFFF;
         return _;
     }
     Node* top=*stack;
@@ -46,7 +47,8 @@ Data peek(Node** stack){
     if(*stack==NULL){
         fprintf(stderr, "ERROR: stack underflow\n");
         Data _;
-        _.integer = 0xFFFFFFFF;
+        _.tag = TYPE_INT;
+        _.val.integer = 0xFFFFFFFF;
         return _;
     }
     return (*stack)->value;
