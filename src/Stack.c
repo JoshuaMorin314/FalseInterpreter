@@ -67,3 +67,7 @@ void print_stack(Node** stack){
     printf("Top -> %s\n",s);
     return;
 }
+
+int empty(Node** stack) {
+    return *stack==NULL;
+}
