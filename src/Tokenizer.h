@@ -1,6 +1,6 @@
 #ifndef TOKENIZER_H
 #define TOKENIZER_H
 
-extern char* gettoken(char** progstring); 
+extern Data gettoken(char** progstring); 
 
 #endif
