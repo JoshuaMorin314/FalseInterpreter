@@ -35,10 +35,10 @@ void teststack(){
 }
 
 int main(){
-    char* programstring = "Hello World!\nOther\tWords.";
+    char* programstring = "0 0[ß^$$47>\\58\\>&][48-\\10*+]#%[$1>][$1-]#[\\$0=~][*]#%.";
     char** hahareference = &programstring;
 
-    char* funny = (char*)malloc(50*sizeof(char));
+    char* funny = (char*)malloc(10*sizeof(char));
     funny = gettoken(hahareference);
     while (funny != NULL) {
         printf("%s\n", funny);
