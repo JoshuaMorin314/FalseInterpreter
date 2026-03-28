@@ -31,8 +31,8 @@ Data pop(Node** stack){
     if(*stack==NULL){
         fprintf(stderr, "ERROR: stack underflow\n");
         Data _;
-        _.tag = TYPE_INT;
-        _.val.integer = 0xFFFFFFFF;
+        _.tag=TYPE_INT;
+        _.val.integer=0xFFFFFFFF;
         return _;
     }
     Node* top=*stack;
@@ -47,8 +47,8 @@ Data peek(Node** stack){
     if(*stack==NULL){
         fprintf(stderr, "ERROR: stack underflow\n");
         Data _;
-        _.tag = TYPE_INT;
-        _.val.integer = 0xFFFFFFFF;
+        _.tag=TYPE_INT;
+        _.val.integer=0xFFFFFFFF;
         return _;
     }
     return (*stack)->value;
@@ -57,23 +57,38 @@ Data peek(Node** stack){
 // prints out the stack (runs into an issue if the stack is big but this funtion isn't used for anything but testing)
 void print_stack(Node** stack){
     Node* current=*stack;
-    char s[100]="[";
-    int ind=(current!=NULL)?1:2;
-    while (current!=NULL){
-        char buffer[20];
-        sprintf(buffer,"%d,",current->value);
-        int i;
-        for(i=0; buffer[i]!='\0'; i++){
-            s[ind]=buffer[i];
-            ind++;
+    if(current==NULL) {
+        printf("NULL");
+        return;
+    }
+    printf("[Top -> ");
+    Data d;
+    while(current->next!=NULL){
+        d=current->value;
+        switch (d.tag) {
+            case TYPE_INT:
+                printf("%d, ", d.val.integer);
+                break;
+            case TYPE_FUN:
+            case TYPE_STR:
+                printf("%s, ", d.val.string);
+                break;
         }
         current=current->next;
     }
-    s[ind-1]=']';
-    printf("Top -> %s\n",s);
-    return;
+    d=current->value;
+    switch(d.tag){
+        case TYPE_INT:
+            printf("%d]", d.val.integer);
+            break;
+        case TYPE_FUN:
+        case TYPE_STR:
+            printf("%s]", d.val.string);
+            break;
+    }
 }
 
+//Returns if the stack is currently empty
 int empty(Node** stack) {
     return *stack==NULL;
 }

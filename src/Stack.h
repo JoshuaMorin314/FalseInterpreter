@@ -4,7 +4,8 @@
 //Implement a tagged union for data storage
 typedef enum DT{
     TYPE_INT,
-    TYPE_STR
+    TYPE_STR,
+    TYPE_FUN
 } DT;
 
 typedef struct Data{
