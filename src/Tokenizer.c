@@ -60,6 +60,7 @@ Data gettoken(char** progstring) {
             dataret.val.integer *= 10;
             start++;
         }
+        dataret.val.integer /= 10;
     } else if (*start == '\"') {                //Check for strings
         start++;
         while (*start != '\"') {
@@ -76,15 +77,31 @@ Data gettoken(char** progstring) {
         dataret.tag = TYPE_INT;
         dataret.val.integer = *start;
     } else if (*start == '[') {                 //Check for lambdas
+        int brackets = 1;
         start++;
-        while (*start != ']') {
+        if (*start == '[') brackets++;
+        if (*start == ']') brackets--;
+        while (brackets) {
             *striter = *start;
             striter++;
             start++;
+            if (*start == '[') brackets++;
+            if (*start == ']') brackets--;
         }
         *striter = 0;
         start++;
+        dataret.tag = TYPE_FUN;
+        dataret.val.string = stret;
+    } else if (isalphabetic(*start)) {
         dataret.tag = TYPE_STR;
+        *striter = *start; start++; striter++;
+        if (*start == ':' || *start == ';') {
+            *striter = *start; start++; striter++;
+        } else {
+            printf("Syntax Error: Variables must be followed by a fetch/store command.");
+            exit(EXIT_FAILURE);
+        }    
+        *striter = 0;
         dataret.val.string = stret;
     } else if (*start == '{') {                 //Ignore comments
         for(; *start != '}'; start++);
@@ -126,35 +143,29 @@ void ROT(Node** stack) {
     push(stack, v3);
 }
 
-void PICK(Node** stack, int i) {
+void PICK(Node** stack) {
+    Data idx = pop(stack);
+    if (idx.tag != TYPE_INT) {
+        printf("Type Error: Pick index must be int");
+        exit(EXIT_FAILURE);
+    }
+    
     Node* traverse = *stack;
-    for(i; i != 0; i--) {
+    for(int i = idx.val.integer; i != 0; i--) {
         traverse = traverse->next;
     }
     push(stack, traverse->value);
 }
 
 void DUP(Node** stack) {
-    PICK(stack, 0);
+    push(stack, peek(stack));
 }
 
-void store(Node** stack) {
-    Data ch = pop(stack);
-    Data val = pop(stack);          //Get data from the stack
-    if (ch.tag == TYPE_STR && len(ch.val.string) == 1 && isalphabetic(ch.val.string[0]))
-        variables[*(ch.val.string) - 'a'] = val;    //Do the thing
-    else {
-        printf("Type Error: Variable must be an alphabetical character");
-        exit(EXIT_FAILURE);
-    }
+void store(Node** stack, char ch) {
+    Data val = pop(stack);        //Get data from the stack
+    variables[ch - 'a'] = val;    //Do the thing
 }
 
-void fetch(Node** stack) {
-    Data ch = pop(stack);
-    if (ch.tag == TYPE_STR && len(ch.val.string) == 1 && isalphabetic(ch.val.string[0]))
-        push(stack, variables[*(ch.val.string) - 'a']);
-    else {
-        printf("Type Error: Variable must be an alphabetical character");
-        exit(EXIT_FAILURE);
-    } 
+void fetch(Node** stack, char ch) {
+    push(stack, variables[ch - 'a']);
 }
