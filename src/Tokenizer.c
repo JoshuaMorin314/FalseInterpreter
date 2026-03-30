@@ -121,23 +121,22 @@ Data gettoken(char** progstring) {
 }
 
 /**** FALSE FUNCTIONS *****/
+//Stack
 void DROP(Node** stack) {
     pop(stack);
 }
 
 void SWAP(Node** stack) {
-    Data v1, v2;
-    v1 = pop(stack);
-    v2 = pop(stack);
+    Data v1 = pop(stack);
+    Data v2 = pop(stack);
     push(stack, v1);
     push(stack, v2);
 }
 
 void ROT(Node** stack) {
-    Data v1, v2, v3;
-    v1 = pop(stack);
-    v2 = pop(stack);
-    v3 = pop(stack);
+    Data v1 = pop(stack);
+    Data v2 = pop(stack);
+    Data v3 = pop(stack);
     push(stack, v2);
     push(stack, v1);
     push(stack, v3);
@@ -161,6 +160,8 @@ void DUP(Node** stack) {
     push(stack, peek(stack));
 }
 
+
+//Variables
 void store(Node** stack, char ch) {
     Data val = pop(stack);        //Get data from the stack
     variables[ch - 'a'] = val;    //Do the thing
@@ -168,4 +169,28 @@ void store(Node** stack, char ch) {
 
 void fetch(Node** stack, char ch) {
     push(stack, variables[ch - 'a']);
+}
+
+
+//Control Flow
+char* getlambda(Node** stack) {
+    Data lmb = pop(stack);
+    if (lmb.tag == TYPE_FUN) {
+        return lmb.val.string;
+    } else {
+        return "ERROR";
+    }
+}
+
+
+//Arithmatic
+void plus(Node** stack) {
+    Data a = pop(stack);
+    Data b = pop(stack);
+    Data* ret = (Data*)malloc(sizeof(Data*));
+    if (a.tag == TYPE_INT && b.tag == TYPE_INT) {
+        ret->val.integer = a.val.integer + b.val.integer;
+        ret->tag = TYPE_INT;
+        push(stack, *ret);
+    }
 }

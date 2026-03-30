@@ -20,4 +20,10 @@ extern void DUP(Node** stack);
 extern void fetch(Node** stack, char ch);
 extern void store(Node** stack, char ch);
 
+//Arithmatic
+extern void plus(Node** stack);
+
+//Functions
+extern char* getlambda(Node** stack);
+
 #endif //TOKENIZER_H
