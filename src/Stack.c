@@ -79,11 +79,11 @@ void print_stack(Node** stack){
     d=current->value;
     switch(d.tag){
         case TYPE_INT:
-            printf("%d]", d.val.integer);
+            printf("%d]\n", d.val.integer);
             break;
         case TYPE_FUN:
         case TYPE_STR:
-            printf("%s]", d.val.string);
+            printf("%s]\n", d.val.string);
             break;
     }
 }

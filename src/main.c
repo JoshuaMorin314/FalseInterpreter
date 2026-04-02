@@ -2,39 +2,7 @@
 #include <stdlib.h>
 #include "Stack.h"
 #include "Tokenizer.h"
-
-/*
-void teststack(){
-    Node** stack=create_stack();
-    int top;
-    // test push
-    printf("PUSH:\n");
-    push(stack,0);
-    push(stack,1);
-    push(stack,-1);
-    push(stack,0x7FFFFFFF);
-    push(stack,0x80000000);
-    print_stack(stack);
-    // test pop
-    top=pop(stack);
-    printf("POP:\nvalue: %d\n",top);
-    print_stack(stack);
-    // test peek
-    top=peek(stack);
-    printf("PEEK:\nvalue: %d\n",top);
-    print_stack(stack);
-    // test underflow
-    pop(stack);
-    pop(stack);
-    pop(stack);
-    pop(stack);
-    printf("EMPTY:\n");
-    print_stack(stack);
-    printf("UNDERFLOW:\n");
-    peek(stack);
-    pop(stack);
-}
-*/
+#include "False.h"
 
 void processvariable(Node** stack, char var, char fun);
 void processlexeme(Node** stack, char lex);
@@ -65,12 +33,14 @@ int main(){
         }
         token = gettoken(progref);
     }
+    //*/
     print_stack(stack);
+    
 
     return 0; 
 }
 
-void processvariable(Node** stack, char var, char fun) {
+void processvariable(Node** stack, char var, char fun) { //
     switch (fun) {
         /* variable functions */
         case ':':           //Store top into a variable
@@ -86,19 +56,19 @@ void processlexeme(Node** stack, char lex) {
     switch(lex) {
         /* stack functions */
         case '$':           //Duplicate top of stack (equivelant to pick(0))
-            DUP(stack);
+            dup(stack);
             break;
         case '%':           //Pop top item from stack
-            DROP(stack);
+            drop(stack);
             break;
         case '\\':          //Swap top and top->next
-            SWAP(stack);
+            swap(stack);
             break;
         case '@':           //Bring third item to top
-            ROT(stack);
+            rot(stack);
             break;
         case 'U':           //C doesn't like greek letters so I'm improvising
-            PICK(stack);    //Pick the nth item from the stack (starting from 0)
+            pick(stack);    //Pick the nth item from the stack (starting from 0)
             break;
 
         /* Arithmatic */
