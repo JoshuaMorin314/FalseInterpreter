@@ -17,6 +17,8 @@ extern void store(Node** stack, char ch);
 extern void plus(Node** stack);
 
 //Functions
-extern char* getlambda(Node** stack);
+extern void execute(Node** stack,char* subprog);
+
+
 
 #endif // FALSE_H
