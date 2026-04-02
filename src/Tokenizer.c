@@ -152,10 +152,39 @@ void processlexeme(Node** stack, char lex) {
             break;
 
         /* Arithmatic */
-        case '+':
+        case '+':           //Add top and top->next
             plus(stack);
             break;
-
+        case '-':           //Subtract top and top->next
+            subtract(stack);
+            break;
+        case '*':           //Multiply top and top->next
+            multiply(stack);
+            break;
+        case '/':           //Divide top and top->next
+            divide(stack);
+            break;
+        
+        /* Logic */
+        case '_':           //negete top (i.e. invert its sign)
+            negate(stack);
+            break;
+        case '&':           //Bitwize And top and top->next
+            and(stack);
+            break;
+        case '|':           //Bitwize Or top and top->next
+            or(stack);
+            break;
+        case '~':           //Bitwize Not top and top->next
+            not(stack);
+            break;
+        case '>':           //Are top and top->next equal (-1 if true, 0 if false)
+            greater(stack);
+            break;
+        case '=':           //Are top and top->next equal (-1 if true, 0 if false)
+            equal(stack);
+            break;
+        
         /* Control Flow */
         case '!':           //Execute Lambda
             top=peek(stack);
@@ -167,28 +196,16 @@ void processlexeme(Node** stack, char lex) {
                 execute(stack,top.val.string);
             }
             break;
+        case '?':           //Conditional statement
+            conditional(stack);
+            break;
 
         /* Variable storage and retrieval */
         case ':':           //Store top into a variable
-            Data tops=peek(stack);
-            if(tops.tag!=VAR){
-                printf("ERROR: cannot store unless the top of the stack specifies a variable");
-                exit(EXIT_FAILURE);
-            }else{
-                pop(stack);
-                store(stack,tops.val.character);
-            }
+            store(stack);
             break;
-            
         case ';':           //Fetch from a variable
-            Data top=peek(stack);
-            if(top.tag!=VAR){
-                printf("ERROR: cannot fetch unless the top of the stack specifies a variable");
-                exit(EXIT_FAILURE);
-            }else{
-                pop(stack);
-                fetch(stack,top.val.character);
-            }
+            fetch(stack);
             break;
     }
 }

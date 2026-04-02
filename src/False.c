@@ -7,12 +7,12 @@ Data variables[26];
 
 /**** FALSE FUNCTIONS *****/
 //Stack
-void dup(Node** stack) {
-    push(stack, peek(stack));
-}
-
 void drop(Node** stack) {
     pop(stack);
+}
+
+void dup(Node** stack) {
+    push(stack, peek(stack));
 }
 
 void swap(Node** stack) {
@@ -45,26 +45,138 @@ void pick(Node** stack) {
     push(stack, traverse->value);
 }
 
-//Variables
-void store(Node** stack, char ch) {
-    Data val = pop(stack);        //Get data from the stack
-    variables[ch - 'a'] = val;    //Do the thing
-}
-
-void fetch(Node** stack, char ch) {
-    push(stack, variables[ch - 'a']);
-}
-
 //Arithmatic
 void plus(Node** stack) {
-    Data a = pop(stack);
-    Data b = pop(stack);
-    Data* ret = (Data*)malloc(sizeof(Data*));
-    if (a.tag == INT && b.tag == INT) {
-        ret->val.integer = a.val.integer + b.val.integer;
-        ret->tag = INT;
-        push(stack, *ret);
+    Data a=pop(stack);
+    Data b=pop(stack);
+    Data* ret=(Data*)malloc(sizeof(Data*));
+    if(a.tag==INT && b.tag==INT){
+        ret->val.integer=a.val.integer+b.val.integer;
+        ret->tag=INT;
+        push(stack,*ret);
     }
+}
+
+void subtract(Node** stack){
+    Data a=pop(stack);
+    Data b=pop(stack);
+    Data* ret=(Data*)malloc(sizeof(Data*));
+    if(a.tag==INT && b.tag==INT){
+        ret->val.integer=b.val.integer-a.val.integer;
+        ret->tag=INT;
+        push(stack,*ret);
+    }
+}
+
+void multiply(Node** stack){
+    Data a=pop(stack);
+    Data b=pop(stack);
+    Data* ret=(Data*)malloc(sizeof(Data*));
+    if(a.tag==INT && b.tag==INT){
+        ret->val.integer=a.val.integer*b.val.integer;
+        ret->tag=INT;
+        push(stack,*ret);
+    }
+}
+
+void divide(Node** stack){
+    Data a=pop(stack);
+    Data b=pop(stack);
+    Data* ret=(Data*)malloc(sizeof(Data*));
+    if(a.tag==INT && b.tag==INT){
+        ret->val.integer=b.val.integer/a.val.integer;
+        ret->tag=INT;
+        push(stack,*ret);
+    }
+}
+
+//Logical
+void negate(Node** stack){
+    Data a=pop(stack);
+    Data* ret=(Data*)malloc(sizeof(Data*));
+    if(a.tag==INT){
+        ret->val.integer=-1*a.val.integer;
+        ret->tag=INT;
+        push(stack,*ret);
+    }
+}
+
+void and(Node** stack){
+    Data a=pop(stack);
+    Data b=pop(stack);
+    Data* ret=(Data*)malloc(sizeof(Data*));
+    if(a.tag==INT && b.tag==INT){
+        ret->val.integer=a.val.integer&b.val.integer;
+        ret->tag=INT;
+        push(stack,*ret);
+    }
+}
+
+void or(Node** stack){
+    Data a=pop(stack);
+    Data b=pop(stack);
+    Data* ret=(Data*)malloc(sizeof(Data*));
+    if(a.tag==INT && b.tag==INT){
+        ret->val.integer=a.val.integer|b.val.integer;
+        ret->tag=INT;
+        push(stack,*ret);
+    }
+}
+
+void not(Node** stack){
+    Data a=pop(stack);
+    Data* ret=(Data*)malloc(sizeof(Data*));
+    if(a.tag==INT){
+        ret->val.integer=~a.val.integer;
+        ret->tag=INT;
+        push(stack,*ret);
+    }
+}
+
+void greater(Node** stack){
+    Data a=pop(stack);
+    Data b=pop(stack);
+    Data* ret=(Data*)malloc(sizeof(Data*));
+    if(a.tag==INT && b.tag==INT){
+        ret->val.integer=(b.val.integer>a.val.integer)?-1:0;
+        ret->tag=INT;
+        push(stack,*ret);
+    }
+}
+
+void equal(Node** stack){
+    Data a=pop(stack);
+    Data b=pop(stack);
+    Data* ret=(Data*)malloc(sizeof(Data*));
+    if(a.tag==INT && b.tag==INT){
+        ret->val.integer=(b.val.integer==a.val.integer)?-1:0;
+        ret->tag=INT;
+        push(stack,*ret);
+    }
+}
+
+//Variables
+void store(Node** stack){
+    Data top=peek(stack);
+    if(top.tag!=VAR){
+        printf("ERROR: cannot store unless the top of the stack specifies a variable");
+        exit(EXIT_FAILURE);
+    }
+    char c=top.val.character;
+    pop(stack);
+    Data value=pop(stack);     //Get data from the stack
+    variables[c-'a']=value;    //Do the thing
+}
+
+void fetch(Node** stack){
+    Data top=peek(stack);
+    if(top.tag!=VAR){
+        printf("ERROR: cannot fetch unless the top of the stack specifies a variable");
+        exit(EXIT_FAILURE);
+    }
+    pop(stack);
+    char c=top.val.character;
+    push(stack,variables[c-'a']);
 }
 
 /* Control Flow */
@@ -82,3 +194,28 @@ void execute(Node** stack,char* str){
     }
 }
 
+void conditional(Node** stack){
+    // check if b is a valid input (i.e. an lambda function)
+    Data a=pop(stack);
+    if(a.tag!=FUN){
+        printf("ERROR: cannot execute unless the top of the stack specifies a function");
+        exit(EXIT_FAILURE);
+    }
+    // check if b is a valid input (i.e. an integer)
+    Data b=pop(stack);
+    if(b.tag!=INT){
+        printf("ERROR: cannot execute unless the top of the stack specifies a function");
+        exit(EXIT_FAILURE);
+    }
+    // if b holds a non-zero value then execute the code in the value of a
+    if(b.val.integer!=0){
+        execute(stack,a.val.string);
+    }
+}
+
+//void loop(struct Node**);
+
+/* I/O Controls */
+//void read(Node** stack);
+//void emit(Node** stack);
+//void write(Node** stack);
