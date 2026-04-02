@@ -11,7 +11,7 @@ Node** create_stack(){
 }
 
 // creates a new Linked List node
-Node* create_node(int value){
+Node* create_node(Data value){
     Node* node=(Node*)malloc(sizeof(Node*));
     node->value=value;
     node->next=NULL;
@@ -19,7 +19,7 @@ Node* create_node(int value){
 }
 
 // pushes value onto the stack
-void push(Node** stack,int value){
+void push(Node** stack,Data value){
     Node* top=create_node(value);
     top->next=*stack;
     *stack=top;
@@ -27,23 +27,29 @@ void push(Node** stack,int value){
 }
 
 // pops the top of the stack off
-int pop(Node** stack){
+Data pop(Node** stack){
     if(*stack==NULL){
         fprintf(stderr, "ERROR: stack underflow\n");
-        return 0xFFFFFFFF;
+        Data _;
+        _.tag=TYPE_INT;
+        _.val.integer=0xFFFFFFFF;
+        return _;
     }
     Node* top=*stack;
-    int output=top->value;
+    Data output=top->value;
     *stack=top->next;
     free(top);
     return output;
 }
 
 // outputs the top stack value without popping it
-int peek(Node** stack){
+Data peek(Node** stack){
     if(*stack==NULL){
         fprintf(stderr, "ERROR: stack underflow\n");
-        return 0xFFFFFFFF;
+        Data _;
+        _.tag=TYPE_INT;
+        _.val.integer=0xFFFFFFFF;
+        return _;
     }
     return (*stack)->value;
 }
@@ -51,19 +57,38 @@ int peek(Node** stack){
 // prints out the stack (runs into an issue if the stack is big but this funtion isn't used for anything but testing)
 void print_stack(Node** stack){
     Node* current=*stack;
-    char s[100]="[";
-    int ind=(current!=NULL)?1:2;
-    while (current!=NULL){
-        char buffer[20];
-        sprintf(buffer,"%d,",current->value);
-        int i;
-        for(i=0; buffer[i]!='\0'; i++){
-            s[ind]=buffer[i];
-            ind++;
+    if(current==NULL) {
+        printf("NULL");
+        return;
+    }
+    printf("[Top -> ");
+    Data d;
+    while(current->next!=NULL){
+        d=current->value;
+        switch (d.tag) {
+            case TYPE_INT:
+                printf("%d, ", d.val.integer);
+                break;
+            case TYPE_FUN:
+            case TYPE_STR:
+                printf("%s, ", d.val.string);
+                break;
         }
         current=current->next;
     }
-    s[ind-1]=']';
-    printf("Top -> %s\n",s);
-    return;
+    d=current->value;
+    switch(d.tag){
+        case TYPE_INT:
+            printf("%d]\n", d.val.integer);
+            break;
+        case TYPE_FUN:
+        case TYPE_STR:
+            printf("%s]\n", d.val.string);
+            break;
+    }
+}
+
+//Returns if the stack is currently empty
+int empty(Node** stack) {
+    return *stack==NULL;
 }
