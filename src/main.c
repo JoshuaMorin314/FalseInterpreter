@@ -1,121 +1,32 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "Stack.h"
-#include "Tokenizer.h"
 #include "False.h"
-
-void processvariable(Node** stack, char var, char fun);
-void processlexeme(Node** stack, char lex);
-void lambda(char* subprog, Node** stack);
 
 int main(){
     Node** stack = create_stack();
-    char* progstr = "1[3+]a:6a;!";
-    char** progref = &progstr;
-
-    Data token = gettoken(progref);
-    while (token.tag == TYPE_STR && token.val.string != NULL || 
-            token.tag == TYPE_INT || token.tag == TYPE_FUN) {
-        switch(token.tag) {
-            case TYPE_STR:
-                if (len(token.val.string) > 2) {
-                    printf("%s", token.val.string);
-                } else if (len(token.val.string) == 2) {
-                    processvariable(stack, token.val.string[0], token.val.string[1]);
-                } else {
-                    processlexeme(stack, *token.val.string);
-                }
-                break;
-
-            default:
-                push(stack, token);
-                break;
-        }
-        token = gettoken(progref);
-    }
-    //*/
+    char* progstr = "10 5+10 5-10 5*10 5/5_54a:1U_1U_$@\\%a;@\"Hello\"b:@1 2=2 1>1_~0 1_&1_0|[1+]f:5f;!f;!0~[9_]?0[9]?b;a;,b;,a;."; // expects 6Hello54{Top -> "Hello",-9,7,-1,0,0,-1,0,-2,5,54,-5,2,50,5,15}
+    // other test inputs: //"8 2 3+\\$2U@%"; //"1[3+]\"Hello World\"a:6a;!";
+    execute(stack,progstr);
     print_stack(stack);
-    
-
     return 0; 
 }
 
-void processvariable(Node** stack, char var, char fun) { //
-    switch (fun) {
-        /* variable functions */
-        case ':':           //Store top into a variable
-            store(stack, var);
-            break;
-        case ';':           //Fetch from a variable
-            fetch(stack, var);
-            break;
-    }
-}
-
-void processlexeme(Node** stack, char lex) {
-    switch(lex) {
-        /* stack functions */
-        case '$':           //Duplicate top of stack (equivelant to pick(0))
-            dup(stack);
-            break;
-        case '%':           //Pop top item from stack
-            drop(stack);
-            break;
-        case '\\':          //Swap top and top->next
-            swap(stack);
-            break;
-        case '@':           //Bring third item to top
-            rot(stack);
-            break;
-        case 'U':           //C doesn't like greek letters so I'm improvising
-            pick(stack);    //Pick the nth item from the stack (starting from 0)
-            break;
-
-        /* Arithmatic */
-        case '+':
-            plus(stack);
-            break;
-
-        /* Control Flow */
-        case '!':           //Execute Lambda
-            char* func1 = getlambda(stack);
-            if (func1 == "ERROR") {
-                printf("Error: Function call made to non-function");
-                exit(EXIT_FAILURE);
-            } else {
-                lambda(func1, stack);
-            }
-            break;
-        
-        /* Error handling for fetch/store. These should not get here without a variable name */
-        case ';':
-        case ':':
-            printf("Error: Fetch/store called with no associated variable");
-            exit(EXIT_FAILURE);
-    }
-}
-
-void lambda(char* subprog, Node** stack) {
-    char** lmbref = &subprog;
-    Data token = gettoken(lmbref);
-    while (token.tag == TYPE_STR && token.val.string != NULL || 
-            token.tag == TYPE_INT || token.tag == TYPE_FUN) {
-        switch(token.tag) {
-            case TYPE_STR:
-                if (len(token.val.string) > 2) {
-                    printf("%s", token.val.string);
-                } else if (len(token.val.string) == 2) {
-                    processvariable(stack, token.val.string[0], token.val.string[1]);
-                } else if (isalphabetic(*token.val.string)) {
-                    push(stack, token);
-                } else {
-                    processlexeme(stack, *token.val.string);
-                }
-                break;
-            default:
-                push(stack, token);
-                break;
-        }
-        token = gettoken(lmbref);
-    }
-}
+/*
+TO DO:
+1. while functionality < see False.c line 216 and False.h line 33
+  >>Haven't tried yet; might not be that bad; not super sure I know how exactly it is supposed to work 
+2. read functionality  < see False.c line 219 and False.h line 36
+    have to figure out how to differentiate input and code in stdin
+    have to figure out a plan for the front end in general
+  >>Probably need to meet  to discuss this
+3. Strings (i.e. the " command) is implemented incorrectly; decide wwhether to make this a feature or relimit it to what is allowed by the original language
+  >>Probably need to meet to discuss this
+4. comments for False.h lines 33-38
+5. make the interpreter look to stdin or a file for input instead of hard coding it into the source code 
+  >>I can do this
+6. maybe move where stack is assigned for the sake of organization?
+  >>Not really 100% necessary
+7. figure out what takes it so long to run lol
+  >>If theres time
+*/

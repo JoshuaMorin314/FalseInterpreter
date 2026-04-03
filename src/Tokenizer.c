@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "Stack.h"
+#include "False.h"
 
 void copyupto(char* dest, const char* src, int index) {
     for(int i = 0; i < index && src[i] && dest[i]; i++) {
@@ -38,7 +39,7 @@ We then wipe the token from the input stream, starting the string at a new chara
 Data gettoken(char** progstring) {
     if (!len(*progstring)) {
         Data reterror;
-        reterror.tag = TYPE_STR;
+        reterror.tag = STR; // doesn't really make sense?
         reterror.val.string = NULL;
         return reterror;         //Leave early if no program left
     }
@@ -51,7 +52,7 @@ Data gettoken(char** progstring) {
     while (iswhitespace(*start)) start++;       //Skip past whitespacess
 
     if (isnumeric(*start)) {                    //Check for int literals
-        dataret.tag = TYPE_INT;
+        dataret.tag = INT;
         dataret.val.integer = 0;
         while (isnumeric(*start)) {
             dataret.val.integer += *start - '0';
@@ -68,12 +69,12 @@ Data gettoken(char** progstring) {
         }
         *striter = 0;
         start++;
-        dataret.tag = TYPE_STR;
+        dataret.tag = STR;
         dataret.val.string = stret;
     } else if (*start == '\'') {                //Check for character codes
         start++;
-        dataret.tag = TYPE_INT;
-        dataret.val.integer = *start;
+        dataret.tag = INT;
+        dataret.val.integer = (int)(*start);
     } else if (*start == '[') {                 //Check for lambdas
         int brackets = 1;
         start++;
@@ -88,46 +89,109 @@ Data gettoken(char** progstring) {
         }
         *striter = 0;
         start++;
-        dataret.tag = TYPE_FUN;
+        dataret.tag = FUN;
         dataret.val.string = stret;
     } else if (isalphabetic(*start)) {
-        dataret.tag = TYPE_STR;
-        *striter = *start; start++; striter++;
-        if (*start == ':' || *start == ';') {
-            *striter = *start; start++; striter++;
-        } else {
-            printf("Syntax Error: Variables must be followed by a fetch/store command.");
-            exit(EXIT_FAILURE);
-        }    
-        *striter = 0;
-        dataret.val.string = stret;
+        dataret.tag = VAR;
+        dataret.val.character=*start;
+        start++;
     } else if (*start == '{') {                 //Ignore comments
         for(; *start != '}'; start++);
         start++;
     } else {                                    //Save everything else as a character
-        *striter = *start;
-        *(striter+1) = 0;
-
-        dataret.tag = TYPE_STR;
-        dataret.val.string = striter;
-
+        dataret.tag = OP;
+        dataret.val.character=*start;
         start++;
-    }
-
-    // print dataret
-    switch(dataret.tag){
-        case TYPE_INT:\
-          printf("INT: %d\n",dataret.val.integer); 
-          break;
-        case TYPE_STR:
-          printf("STR: %s\n",dataret.val.string); 
-          break;
-        case TYPE_FUN:
-          printf("FUN: %s\n",dataret.val.string); 
-          break;
     }
 
     *progstring = start;                        //Move start location
     return dataret;                             //Return the token
 }
 
+// determines which function to call based on an a command character (the lex parameter)
+void processlexeme(Node** stack, char lex) {
+    Data top;
+    switch(lex) {
+        /* stack functions */
+        case '$':           //Duplicate top of stack (equivelant to pick(0))
+            dup(stack);
+            break;
+        case '%':           //Pop top item from stack
+            drop(stack);
+            break;
+        case '\\':          //Swap top and top->next
+            swap(stack);
+            break;
+        case '@':           //Bring third item to top
+            rot(stack);
+            break;
+        case 'U':           //C doesn't like greek letters so I'm improvising
+            pick(stack);    //Pick the nth item from the stack (starting from 0)
+            break;
+
+        /* Arithmatic */
+        case '+':           //Add top and top->next
+            plus(stack);
+            break;
+        case '-':           //Subtract top and top->next
+            subtract(stack);
+            break;
+        case '*':           //Multiply top and top->next
+            multiply(stack);
+            break;
+        case '/':           //Divide top and top->next
+            divide(stack);
+            break;
+        
+        /* Logic */
+        case '_':           //negete top (i.e. invert its sign)
+            negate(stack);
+            break;
+        case '&':           //Bitwize And top and top->next
+            and(stack);
+            break;
+        case '|':           //Bitwize Or top and top->next
+            or(stack);
+            break;
+        case '~':           //Bitwize Not top and top->next
+            not(stack);
+            break;
+        case '>':           //Are top and top->next equal (-1 if true, 0 if false)
+            greater(stack);
+            break;
+        case '=':           //Are top and top->next equal (-1 if true, 0 if false)
+            equal(stack);
+            break;
+        
+        /* Control Flow */
+        case '!':           //Execute Lambda
+            top=peek(stack);
+            if(top.tag!=FUN){
+                printf("ERROR: cannot execute unless the top of the stack specifies a function");
+                exit(EXIT_FAILURE);
+            }else{
+                pop(stack);
+                execute(stack,top.val.string);
+            }
+            break;
+        case '?':           //Conditional statement
+            conditional(stack);
+            break;
+
+        /* Variable storage and retrieval */
+        case ':':           //Store top into a variable
+            store(stack);
+            break;
+        case ';':           //Fetch from a variable
+            fetch(stack);
+            break;
+
+        /* I/O controls */
+        case ',':           //print as letters
+            emit(stack);
+            break;
+        case '.':           //print as numbers
+            write(stack);
+            break;
+    }
+}

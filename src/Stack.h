@@ -3,22 +3,25 @@
 
 //Implement a tagged union for data storage
 typedef enum DT{
-    TYPE_INT,
-    TYPE_STR,
-    TYPE_FUN
+    INT, // val.integer holds a number 
+    STR, // val.string holds a string containing the inside of a set of quotation marks ""
+    FUN, // val.string holds a string containing the inside of a set of square brackets []
+    VAR, // val.character holds a single letter
+    OP   // val.character holds one of the operation characters
 } DT;
 
 typedef struct Data{
-    DT tag;
+    DT tag;             // the type of token being stored
     union {
-        int integer;
-        char* string;
+        int integer;    // if tag is INT
+        char* string;   // if tag is STR or FUN
+        char character; // if tag is VAR or OP
     } val;
 } Data;
 
 // linked list to hold the stack
 typedef struct Node{
-    struct Data value;
+    Data value; 
     struct Node* next;
 } Node;
 

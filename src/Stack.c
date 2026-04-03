@@ -1,6 +1,6 @@
 // Stack.c
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "Stack.h"
 
 // creates an empty stack
@@ -31,7 +31,7 @@ Data pop(Node** stack){
     if(*stack==NULL){
         fprintf(stderr, "ERROR: stack underflow\n");
         Data _;
-        _.tag=TYPE_INT;
+        _.tag=INT;
         _.val.integer=0xFFFFFFFF;
         return _;
     }
@@ -47,7 +47,7 @@ Data peek(Node** stack){
     if(*stack==NULL){
         fprintf(stderr, "ERROR: stack underflow\n");
         Data _;
-        _.tag=TYPE_INT;
+        _.tag=INT;
         _.val.integer=0xFFFFFFFF;
         return _;
     }
@@ -61,30 +61,42 @@ void print_stack(Node** stack){
         printf("NULL");
         return;
     }
-    printf("[Top -> ");
+    printf("{Top -> ");
     Data d;
     while(current->next!=NULL){
         d=current->value;
         switch (d.tag) {
-            case TYPE_INT:
-                printf("%d, ", d.val.integer);
+            case INT:
+                printf("%d,", d.val.integer);
                 break;
-            case TYPE_FUN:
-            case TYPE_STR:
-                printf("%s, ", d.val.string);
+            case FUN:
+                printf("[%s],", d.val.string);
                 break;
+            case STR:
+                printf("\"%s\",", d.val.string);
+                break;
+            case VAR:
+                printf("%c,", d.val.character);
+                break;
+            //case OP: // if this happens then something broke (these shouldn't get pushed)
         }
         current=current->next;
     }
     d=current->value;
     switch(d.tag){
-        case TYPE_INT:
-            printf("%d]\n", d.val.integer);
+        case INT:
+            printf("%d}\n", d.val.integer);
             break;
-        case TYPE_FUN:
-        case TYPE_STR:
-            printf("%s]\n", d.val.string);
+        case FUN:
+            printf("[%s]}\n", d.val.string);
             break;
+        case STR:
+            printf("\"%s\"}\n", d.val.string);
+            break;
+        case VAR:
+            printf("%c}\n", d.val.character);
+            break;
+        //case OP: // if this happens then something broke (these shouldn't get pushed)
     }
 }
 
