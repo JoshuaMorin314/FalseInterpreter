@@ -104,28 +104,6 @@ Data gettoken(char** progstring) {
         start++;
     }
 
-    // print dataret
-    switch(dataret.tag){
-        case INT:
-            printf("INT: %d\n",dataret.val.integer); 
-            break;
-        case STR:
-            printf("STR: %s\n",dataret.val.string); 
-            break;
-        case FUN:
-            printf("FUN: %s\n",dataret.val.string); 
-            break;
-        case VAR:
-            printf("VAR: %c\n",dataret.val.character); 
-            break;
-        case OP:
-            printf("OP:  %c\n",dataret.val.character); 
-            break;
-        default:
-            printf("%d: ",dataret.tag);
-            break;
-    }
-
     *progstring = start;                        //Move start location
     return dataret;                             //Return the token
 }
@@ -206,6 +184,14 @@ void processlexeme(Node** stack, char lex) {
             break;
         case ';':           //Fetch from a variable
             fetch(stack);
+            break;
+
+        /* I/O controls */
+        case ',':           //print as letters
+            emit(stack);
+            break;
+        case '.':           //print as numbers
+            write(stack);
             break;
     }
 }

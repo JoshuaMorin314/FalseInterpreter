@@ -34,7 +34,7 @@ extern void conditional(Node** stack);       // '?'  if the second from top stac
 
 // I/O controls
 // extern void read(Node** stack);  // '^' reads a character from user input
-// extern void emit(Node** stack);  // ',' writes the top of the stack to the console as a character (destructive)
-// extern void write(Node** stack); // '.' writes the top of the stack to the console as a decimal integer (destructive)
+extern void emit(Node** stack);  // ',' writes the top of the stack to the console as a character (destructive)
+extern void write(Node** stack); // '.' writes the top of the stack to the console as a decimal integer (destructive)
 
 #endif // FALSE_H

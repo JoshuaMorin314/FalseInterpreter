@@ -216,6 +216,45 @@ void conditional(Node** stack){
 //void loop(struct Node**);
 
 /* I/O Controls */
-//void read(Node** stack);
-//void emit(Node** stack);
-//void write(Node** stack);
+//void read(Node** stack); // one character at a time or multiple?
+
+void emit(Node** stack){
+    Data top=pop(stack);
+    switch(top.tag){
+        case INT:
+            printf("%c",top.val.integer); 
+            break;
+        case STR:
+            printf("%s",top.val.string); 
+            break;
+        case FUN:
+            printf("[%s]",top.val.string); 
+            break;
+        case VAR:
+            printf("%c",top.val.character); 
+            break;
+        // case OP: // shouldn't be possible
+        // default: // shouldn't be possible
+    }
+}
+
+void write(Node** stack){
+    Data top=pop(stack);
+    switch(top.tag){
+        case INT:
+            printf("%d",top.val.integer); 
+            break;
+        // otherwise just give the pointer? (maybe just only allow this for integers)
+        case STR:
+            printf("@%p",top.val.string); 
+            break;
+        case FUN:
+            printf("@%p",top.val.string); 
+            break;
+        case VAR:
+            printf("%d",top.val.character); 
+            break;
+        // case OP: // shouldn't be possible
+        // default: // shouldn't be possible
+    }
+}
