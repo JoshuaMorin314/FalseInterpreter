@@ -30,7 +30,7 @@ extern void fetch(Node** stack);             // ';'  stores the value of the sec
 //Control flow
 extern void execute(Node** stack,char* str); // '!'  executes the code contained in the parameter str (destructive)
 extern void conditional(Node** stack);       // '?'  if the second from top stack element is non-zero execute the top stack element (destructive)
-//extern void loop(Node** stack); // '#' while loop
+extern void loop(Node** stack);              // '#' while loop
 
 // I/O controls
 // extern void read(Node** stack);  // '^' reads a character from user input
