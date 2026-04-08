@@ -204,7 +204,7 @@ void conditional(Node** stack){
     // check if b is a valid input (i.e. an integer)
     Data b=pop(stack);
     if(b.tag!=INT){
-        printf("ERROR: cannot execute unless the top of the stack specifies a function");
+        printf("ERROR: Invalid conditional expression found");
         exit(EXIT_FAILURE);
     }
     // if b holds a non-zero value then execute the code in the value of a
@@ -213,7 +213,44 @@ void conditional(Node** stack){
     }
 }
 
-//void loop(struct Node**);
+void loop(Node** stack) {
+    //Grab the function to execute
+    Data fun = pop(stack);
+    if (fun.tag != FUN) {
+        printf("ERROR: cannot execute unless the top of the stack specifies a function");
+        exit(EXIT_FAILURE);
+    }
+
+    //Grab the conditional body function
+    Data cond = pop(stack);
+    if (cond.tag != FUN) {
+        printf("ERROR: conditional body must be a function");
+    }
+
+    //Execute the conditional body
+    execute(stack, cond.val.string);
+
+    //Check for valid data
+    Data ctn = pop(stack);
+    if (ctn.tag != INT) {
+        printf("ERROR: conditional body must return an integer.");
+        exit(EXIT_FAILURE);
+    }
+
+    //Execute the main body while loop control is not zero
+    while (ctn.val.integer != 0) {
+        execute(stack, fun.val.string);
+
+        //Update loop control
+        execute(stack, cond.val.string);
+        ctn = pop(stack);
+        if (ctn.tag != INT) {
+            printf("ERROR: conditional body must return an integer.");
+            exit(EXIT_FAILURE);
+        }
+    }
+
+}
 
 /* I/O Controls */
 //void read(Node** stack); // one character at a time or multiple?
