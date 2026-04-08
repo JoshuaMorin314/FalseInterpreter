@@ -83,6 +83,7 @@ Data gettoken(char** progstring) {
         start++;
         dataret.tag = INT;
         dataret.val.integer = (int)(*start);
+        start++;
     } else if (*start == '[') {                 //Check for lambdas
         int brackets = 1;
         start++;
@@ -136,7 +137,7 @@ void processlexeme(Node** stack, char lex) {
 
         /* Arithmatic */
         case '+':           //Add top and top->next
-            plus(stack);
+            add(stack);
             break;
         case '-':           //Subtract top and top->next
             subtract(stack);
@@ -196,6 +197,9 @@ void processlexeme(Node** stack, char lex) {
             break;
 
         /* I/O controls */
+        case '^':           //print as letters
+            read(stack);
+            break;
         case ',':           //print as letters
             emit(stack);
             break;

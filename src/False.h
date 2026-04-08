@@ -10,7 +10,7 @@ extern void rot(Node** stack);               // '@'  removes the third element f
 extern void pick(Node** stack);              // 'U'  makes a copy of the element as many elements deep on the stack as the value on the top stack element and pushes it on the top of the stack (preserves the copied value destroys the top value)
 
 //Arithmatic
-extern void plus(Node** stack);              // '+'  adds the top two elements on the stack (destructive)
+extern void add(Node** stack);               // '+'  adds the top two elements on the stack (destructive)
 extern void subtract(Node** stack);          // '-'  subtracts the top stack element from the second to top element on the stack (destructive)
 extern void multiply(Node** stack);          // '*'  multiplies the top two elements on the stack (destructive)
 extern void divide(Node** stack);            // '/'  divides the second to top stack element by the top element on the stack (destructive)
@@ -33,7 +33,7 @@ extern void conditional(Node** stack);       // '?'  if the second from top stac
 extern void loop(Node** stack);              // '#'  while the second from top stack element is non-zero execute the top stack element repeatedly (destructive)
 
 // I/O controls
-// extern void read(Node** stack);              // '^' reads a character from user input (i.e. stdin) and pushes it onto the top of th stack 
+extern void read(Node** stack);              // '^' reads a character from user input (i.e. stdin) and pushes it onto the top of th stack 
 extern void emit(Node** stack);              // ',' writes the top of the stack to the console as a character (destructive)
 extern void write(Node** stack);             // '.' writes the top of the stack to the console as a decimal integer (destructive)
 

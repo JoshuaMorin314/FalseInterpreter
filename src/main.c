@@ -35,24 +35,14 @@ char* fileText(char* filename){
 int main(){
     char* filename="program.txt"; // put the code in here
     char* prgm=fileText(filename);
-    Node** stack = create_stack();
+    Node** stack=create_stack();
     execute(stack,prgm);
     printf("\n"); // to separate program output from stack state
-    print_stack(stack);
+    //print_stack(stack);
     return 0; 
 }
 
 /*
 TO DO:
-1. read functionality  < see False.c line 219 and False.h line 36
-    have to figure out how to differentiate input and code in stdin 
-    have to figure out a plan for the front end in general
-      read program code from a file (not from stdin)
-      accept user input from stdin
-2. Strings (i.e. the " command) is implemented incorrectly; decide wwhether to make this a feature or relimit it to what is allowed by the original language
-3. maybe move where stack is assigned for the sake of organization?
-  >>Not really 100% necessary
-4. figure out what takes it so long to run lol
-  >>If theres time
-  >> doesn't seem to be happening anymore? don't look a gift horse in the mouth I guess
+1. Strings (i.e. the " command) is implemented incorrectly; decide wwhether to make this a feature or relimit it to what is allowed by the original language
 */
