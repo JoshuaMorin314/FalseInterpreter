@@ -184,10 +184,12 @@ void fetch(Node** stack){
 void execute(Node** stack,char* str){
     char** at=&str;
     Data token=gettoken(at);
-    while(!(token.tag==STR && token.val.string==NULL)){ // until the string has been completely consumed (Note: if "" is in the code it'll end early)
+    while(!(token.tag==STR && token.val.string==NULL)){ // until the string has been completely consumed
         if(token.tag==OP){ // if token is an operation
             processlexeme(stack,token.val.character); // execute based on value
-        }else{
+        }else if(token.tag==STR){ // if token is an string (not including functions)
+            printf("%s",token.val.string); // print the string
+        }else{ // if token is an integer, function string, or variable name
             push(stack,token); // add the stack
         }
         token=gettoken(at);

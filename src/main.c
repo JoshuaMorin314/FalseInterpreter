@@ -41,8 +41,3 @@ int main(){
     //print_stack(stack);
     return 0; 
 }
-
-/*
-TO DO:
-1. Strings (i.e. the " command) is implemented incorrectly; decide wwhether to make this a feature or relimit it to what is allowed by the original language
-*/

@@ -71,11 +71,53 @@ Data gettoken(char** progstring) {
     } else if (*start == '\"') {                //Check for strings
         start++;
         while (*start != '\"') {
-            *striter = *start;
+            if(*start=='\\'){ // processing for escape characters
+                start++;
+                switch(*start){
+                    case 'n':
+                        *striter='\n';
+                        break;
+                    case 't':
+                        *striter='\t';
+                        break;
+                    case 'r':
+                        *striter='\r';
+                        break;
+                    case 'b':
+                        *striter='\b';
+                        break;
+                    case 'f':
+                        *striter='\f';
+                        break;
+                    case 'v':
+                        *striter='\v';
+                        break;
+                    case '\\':
+                        *striter='\\';
+                        break;
+                    case '\"':
+                        *striter='\"';
+                        break;
+                    case '\'':
+                        *striter='\'';
+                        break;
+                    case '0':
+                        *striter='\0';
+                        break;
+                    case 'x': // '\x--' where the -- are two hex digits
+                        printf("\nERROR: hexidecimal escape characters for strings are not supported\n");
+                        break;
+                    default:
+                        printf("\nERROR: unrecognized escape character: \'\\%c\'\n",*start);
+                        break;
+                }
+            }else{
+                *striter=*start;
+            }
             striter++;
             start++;
         }
-        *striter = 0;
+        *striter=0;
         start++;
         dataret.tag = STR;
         dataret.val.string = stret;
