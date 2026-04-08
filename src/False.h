@@ -30,11 +30,11 @@ extern void fetch(Node** stack);             // ';'  stores the value of the sec
 //Control flow
 extern void execute(Node** stack,char* str); // '!'  executes the code contained in the parameter str (destructive)
 extern void conditional(Node** stack);       // '?'  if the second from top stack element is non-zero execute the top stack element (destructive)
-extern void loop(Node** stack);              // '#' while loop
+extern void loop(Node** stack);              // '#'  while the second from top stack element is non-zero execute the top stack element repeatedly (destructive)
 
 // I/O controls
-// extern void read(Node** stack);  // '^' reads a character from user input
-extern void emit(Node** stack);  // ',' writes the top of the stack to the console as a character (destructive)
-extern void write(Node** stack); // '.' writes the top of the stack to the console as a decimal integer (destructive)
+// extern void read(Node** stack);              // '^' reads a character from user input (i.e. stdin) and pushes it onto the top of th stack 
+extern void emit(Node** stack);              // ',' writes the top of the stack to the console as a character (destructive)
+extern void write(Node** stack);             // '.' writes the top of the stack to the console as a decimal integer (destructive)
 
 #endif // FALSE_H

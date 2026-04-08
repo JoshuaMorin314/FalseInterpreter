@@ -51,7 +51,15 @@ Data gettoken(char** progstring) {
 
     while (iswhitespace(*start)) start++;       //Skip past whitespacess
 
-    if (isnumeric(*start)) {                    //Check for int literals
+    if (*start == '{') {                        //Ignore comments
+        int brackets=1;
+        start++;
+        while(brackets){
+            if(*start == '{')brackets++;
+            if(*start == '}')brackets--;
+            start++;
+        }
+    } else if (isnumeric(*start)) {             //Check for int literals
         dataret.tag = INT;
         dataret.val.integer = 0;
         while (isnumeric(*start)) {
@@ -94,9 +102,6 @@ Data gettoken(char** progstring) {
     } else if (isalphabetic(*start)) {
         dataret.tag = VAR;
         dataret.val.character=*start;
-        start++;
-    } else if (*start == '{') {                 //Ignore comments
-        for(; *start != '}'; start++);
         start++;
     } else {                                    //Save everything else as a character
         dataret.tag = OP;
