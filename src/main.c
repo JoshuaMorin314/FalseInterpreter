@@ -7,7 +7,8 @@
 char* fileText(char* filename){
     FILE* F=fopen(filename,"rb"); // open file for reading ("rb"=read binary - so we get an accurate bytecounts)
     if(F==NULL){ // if file didn't exist
-        perror("Error reading file");
+        printf("ERROR: file %s not found\n",filename);
+        exit(EXIT_FAILURE);
     }
     // Move the cursor to the very end of the file
     fseek(F,0,SEEK_END);
@@ -19,11 +20,10 @@ char* fileText(char* filename){
     rewind(F);
     // fill the buffer with the contents of the file
     size_t bytesRead=fread(buffer,1,fileSize,F);
-    // check for errors
-    if (bytesRead<fileSize) {
-        if (ferror(F)) {
-            perror("Error reading file");
-        }
+    // check for 
+    if(bytesRead<fileSize){
+        printf("\nERROR: could not finish reading file %s (%zu of %lu bytes read)\n",filename,bytesRead,fileSize);
+        exit(EXIT_FAILURE);
     }
     // null-terminate the string
     buffer[bytesRead]='\0';
@@ -32,8 +32,9 @@ char* fileText(char* filename){
     return buffer;
 }
 
-int main(){
-    char* filename="program.txt"; // put the code in here
+int main(int argc,char** argv){
+    
+    char* filename=argv[argc-1]; //"program.txt"; // put the code in here
     char* prgm=fileText(filename);
     Node** stack=create_stack();
     execute(stack,prgm);
