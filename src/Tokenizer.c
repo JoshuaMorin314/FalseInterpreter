@@ -177,6 +177,10 @@ void processlexeme(Node** stack, char lex) {
         case '?':           //Conditional statement
             conditional(stack);
             break;
+        
+        case '#':           //While loop
+            loop(stack);
+            break;
 
         /* Variable storage and retrieval */
         case ':':           //Store top into a variable
