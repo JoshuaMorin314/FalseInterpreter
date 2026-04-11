@@ -3,32 +3,42 @@
 #include "Stack.h"
 #include "False.h"
 
-int main(){
-    Node** stack = create_stack();
-    char* progstr = "[@*\\!]a:[[.][\\$1-\\@@$1=~][a;]#a;!]f:5f;!"; //Expected output: 120
-    // Factorial: "[$1=$[\\%1\\]?~[$1-f;!*]?]f:4f;!"; //Expecting {Top -> 24}
-    // "10 5+10 5-10 5*10 5/5_54a:1U_1U_$@\\%a;@\"Hello\"b:@1 2=2 1>1_~0 1_&1_0|[1+]f:5f;!f;!0~[9_]?0[9]?b;a;,b;,a;."; // expects 6Hello54{Top -> "Hello",-9,7,-1,0,0,-1,0,-2,5,54,-5,2,50,5,15}
-    // other test inputs: //"8 2 3+\\$2U@%"; //"1[3+]\"Hello World\"a:6a;!";
-    execute(stack,progstr);
+// opens the file and sets it to a variable
+char* fileText(char* filename){
+    FILE* F=fopen(filename,"rb"); // open file for reading ("rb"=read binary - so we get an accurate bytecounts)
+    if(F==NULL){ // if file didn't exist
+        printf("ERROR: file %s not found\n",filename);
+        exit(EXIT_FAILURE);
+    }
+    // Move the cursor to the very end of the file
+    fseek(F,0,SEEK_END);
+    // Get the current position of the cursor (Since we are at the end this is the total size in bytes)
+    long fileSize=ftell(F);
+    // allocate exactly enough memory to hold the entire contents of the text document
+    char *buffer=malloc(fileSize+1); // +1 for the null terminator '\0'
+    // set the cursor back to the begining of the file so it can start reading
+    rewind(F);
+    // fill the buffer with the contents of the file
+    size_t bytesRead=fread(buffer,1,fileSize,F);
+    // check for 
+    if(bytesRead<fileSize){
+        printf("\nERROR: could not finish reading file %s (%zu of %lu bytes read)\n",filename,bytesRead,fileSize);
+        exit(EXIT_FAILURE);
+    }
+    // null-terminate the string
+    buffer[bytesRead]='\0';
+    // close the file (we have the text saved in buffer)
+    fclose(F);
+    return buffer;
+}
+
+int main(int argc,char** argv){
+    
+    char* filename=argv[argc-1]; //"program.txt"; // put the code in here
+    char* prgm=fileText(filename);
+    Node** stack=create_stack();
+    execute(stack,prgm);
+    printf("\n"); // to separate program output from stack state
     //print_stack(stack);
     return 0; 
 }
-
-/*
-TO DO:
-1. DONE while functionality < see False.c line 216 and False.h line 33
-  >>Haven't tried yet; might not be that bad; not super sure I know how exactly it is supposed to work 
-2. read functionality  < see False.c line 219 and False.h line 36
-    have to figure out how to differentiate input and code in stdin
-    have to figure out a plan for the front end in general
-  >>Probably need to meet  to discuss this
-3. Strings (i.e. the " command) is implemented incorrectly; decide wwhether to make this a feature or relimit it to what is allowed by the original language
-  >>Probably need to meet to discuss this
-4. comments for False.h lines 33-38
-5. make the interpreter look to stdin or a file for input instead of hard coding it into the source code 
-  >>I can do this
-6. maybe move where stack is assigned for the sake of organization?
-  >>Not really 100% necessary
-7. figure out what takes it so long to run lol
-  >>If theres time
-*/

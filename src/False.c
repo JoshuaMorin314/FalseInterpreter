@@ -6,7 +6,7 @@
 Data variables[26];
 
 /**** FALSE FUNCTIONS *****/
-//Stack
+/* Stack */
 void drop(Node** stack) {
     pop(stack);
 }
@@ -45,8 +45,8 @@ void pick(Node** stack) {
     push(stack, traverse->value);
 }
 
-//Arithmatic
-void plus(Node** stack) {
+/* Arithmatic */
+void add(Node** stack) {
     Data a=pop(stack);
     Data b=pop(stack);
     Data* ret=(Data*)malloc(sizeof(Data*));
@@ -90,7 +90,7 @@ void divide(Node** stack){
     }
 }
 
-//Logical
+/* Logical */
 void negate(Node** stack){
     Data a=pop(stack);
     Data* ret=(Data*)malloc(sizeof(Data*));
@@ -155,7 +155,7 @@ void equal(Node** stack){
     }
 }
 
-//Variables
+/* Variables */
 void store(Node** stack){
     Data top=peek(stack);
     if(top.tag!=VAR){
@@ -184,10 +184,12 @@ void fetch(Node** stack){
 void execute(Node** stack,char* str){
     char** at=&str;
     Data token=gettoken(at);
-    while(!(token.tag==STR && token.val.string==NULL)){ // until the string has been completely consumed (Note: if "" is in the code it'll end early)
+    while(!(token.tag==STR && token.val.string==NULL)){ // until the string has been completely consumed
         if(token.tag==OP){ // if token is an operation
             processlexeme(stack,token.val.character); // execute based on value
-        }else{
+        }else if(token.tag==STR){ // if token is an string (not including functions)
+            printf("%s",token.val.string); // print the string
+        }else{ // if token is an integer, function string, or variable name
             push(stack,token); // add the stack
         }
         token=gettoken(at);
@@ -253,7 +255,32 @@ void loop(Node** stack) {
 }
 
 /* I/O Controls */
-//void read(Node** stack); // one character at a time or multiple?
+void read(Node** stack){
+    /*  
+      False only accepts one character at a time but scanf accepts an entire line and won't terminate until the user presses enter.  
+      It is possible to accept only one character at a time and then auto terminate in C but the solution is varies 
+        depending on the operating system the machine is running.
+      This doesn't NEED to be solved but leaving it unaddressed causes it to be impossible to write a False program that accepts 
+        normal user input.
+      For example, to enter "hello" a user would need to type:
+      h
+      e
+      l
+      l
+      o
+      
+      instead of:
+      hello
+
+      fixing this would make for a more pleasant user experience so it is worth taking a look at in the future.
+      */
+    char c='\0';
+    scanf(" %c",&c);
+    Data* ret=(Data*)malloc(sizeof(Data));
+    ret->val.integer=(int)(c);
+    ret->tag=INT;
+    push(stack,*ret);
+}
 
 void emit(Node** stack){
     Data top=pop(stack);
