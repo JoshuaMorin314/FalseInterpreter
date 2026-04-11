@@ -1,0 +1,34 @@
+0^[$'0>1U'0=|1U'9>~&][^]#%
+0c:1e:[$0=~]['0-e;*c;+c:e;10*e:]#
+%c;.
+
+{
+[$1=$[\%1\]?~[$1-f;!*]?]f:"Factorial of: "^'0-f;!"=". {factorial of user input (assumes 0<=input<10)}
+}
+{
+[$1=$[\%1\]?~[$1-f;!*]?]f:4f;!.    {factorial of the number after the :}
+}
+{
+10 5+10 5-10 5*10 5/5_
+54a:
+1U_1U_
+$@\%a;@
+"Hello"b:@
+1 2=2 1>1_~0 1_&1_0|
+[1+]f:5f;!f;!0~[9_]?0[9]?
+b;a;,b;,a;.
+{
+ expected output: 
+  6Hello54
+ expected final stack: 
+  {Top -> "Hello",-9,7,-1,0,0,-1,0,-2,5,54,-5,2,50,5,15}
+}
+}
+{
+"Hello\n\n\0"48,
+[@*\!]a:[[.][\$1-\@@$1=~][a;]#a;!]f:5f;! {Expected output: 120}
+[$1=$[\%1\]?~[$1-f;!*]?]f:4f;! {Factorial; Expected final stack={Top -> 24}}
+10 5+10 5-10 5*10 5/5_54a:1U_1U_$@\%a;@"Hello"b:@1 2=2 1>1_~0 1_&1_0|[1+]f:5f;!f;!0~[9_]?0[9]?b;a;,b;,a;.  {expected output: "6Hello54" expected final stack: {Top -> "Hello",-9,7,-1,0,0,-1,0,-2,5,54,-5,2,50,5,15}}
+8 2 3+\$2U@%
+1[3+]"Hello World"a:6a;!
+}

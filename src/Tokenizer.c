@@ -51,7 +51,15 @@ Data gettoken(char** progstring) {
 
     while (iswhitespace(*start)) start++;       //Skip past whitespacess
 
-    if (isnumeric(*start)) {                    //Check for int literals
+    if (*start == '{') {                        //Ignore comments
+        int brackets=1;
+        start++;
+        while(brackets){
+            if(*start == '{')brackets++;
+            if(*start == '}')brackets--;
+            start++;
+        }
+    } else if (isnumeric(*start)) {             //Check for int literals
         dataret.tag = INT;
         dataret.val.integer = 0;
         while (isnumeric(*start)) {
@@ -63,11 +71,53 @@ Data gettoken(char** progstring) {
     } else if (*start == '\"') {                //Check for strings
         start++;
         while (*start != '\"') {
-            *striter = *start;
+            if(*start=='\\'){ // processing for escape characters
+                start++;
+                switch(*start){
+                    case 'n':
+                        *striter='\n';
+                        break;
+                    case 't':
+                        *striter='\t';
+                        break;
+                    case 'r':
+                        *striter='\r';
+                        break;
+                    case 'b':
+                        *striter='\b';
+                        break;
+                    case 'f':
+                        *striter='\f';
+                        break;
+                    case 'v':
+                        *striter='\v';
+                        break;
+                    case '\\':
+                        *striter='\\';
+                        break;
+                    case '\"':
+                        *striter='\"';
+                        break;
+                    case '\'':
+                        *striter='\'';
+                        break;
+                    case '0':
+                        *striter='\0';
+                        break;
+                    case 'x': // '\x--' where the -- are two hex digits
+                        printf("\nERROR: hexidecimal escape characters for strings are not supported\n");
+                        break;
+                    default:
+                        printf("\nERROR: unrecognized escape character: \'\\%c\'\n",*start);
+                        break;
+                }
+            }else{
+                *striter=*start;
+            }
             striter++;
             start++;
         }
-        *striter = 0;
+        *striter=0;
         start++;
         dataret.tag = STR;
         dataret.val.string = stret;
@@ -75,6 +125,7 @@ Data gettoken(char** progstring) {
         start++;
         dataret.tag = INT;
         dataret.val.integer = (int)(*start);
+        start++;
     } else if (*start == '[') {                 //Check for lambdas
         int brackets = 1;
         start++;
@@ -94,9 +145,6 @@ Data gettoken(char** progstring) {
     } else if (isalphabetic(*start)) {
         dataret.tag = VAR;
         dataret.val.character=*start;
-        start++;
-    } else if (*start == '{') {                 //Ignore comments
-        for(; *start != '}'; start++);
         start++;
     } else {                                    //Save everything else as a character
         dataret.tag = OP;
@@ -131,7 +179,7 @@ void processlexeme(Node** stack, char lex) {
 
         /* Arithmatic */
         case '+':           //Add top and top->next
-            plus(stack);
+            add(stack);
             break;
         case '-':           //Subtract top and top->next
             subtract(stack);
@@ -191,6 +239,9 @@ void processlexeme(Node** stack, char lex) {
             break;
 
         /* I/O controls */
+        case '^':           //print as letters
+            read(stack);
+            break;
         case ',':           //print as letters
             emit(stack);
             break;
