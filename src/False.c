@@ -274,9 +274,9 @@ void read(Node** stack){
 
       fixing this would make for a more pleasant user experience so it is worth taking a look at in the future.
       */
-    char c;
-    scanf("%c",&c);
-    Data* ret=(Data*)malloc(sizeof(Data*));
+    char c='\0';
+    scanf(" %c",&c);
+    Data* ret=(Data*)malloc(sizeof(Data));
     ret->val.integer=(int)(c);
     ret->tag=INT;
     push(stack,*ret);
