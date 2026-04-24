@@ -1,10 +1,5 @@
-0^[$'0>1U'0=|1U'9>~&][^]#%
-0c:1e:[$0=~]['0-e;*c;+c:e;10*e:]#
-%c;.
-
-{
 [$1=$[\%1\]?~[$1-f;!*]?]f:"Factorial of: "^'0-f;!"=". {factorial of user input (assumes 0<=input<10)}
-}
+
 {
 [$1=$[\%1\]?~[$1-f;!*]?]f:4f;!.    {factorial of the number after the :}
 }
