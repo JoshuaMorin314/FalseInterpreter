@@ -7,7 +7,8 @@ typedef enum DT{
     STR, // val.string holds a string containing the inside of a set of quotation marks ""
     FUN, // val.string holds a string containing the inside of a set of square brackets []
     VAR, // val.character holds a single letter
-    OP   // val.character holds one of the operation characters
+    OP,  // val.character holds one of the operation characters
+    SP   // val.int holds a special value. 0 = end of program; 1 = comment
 } DT;
 
 typedef struct Data{

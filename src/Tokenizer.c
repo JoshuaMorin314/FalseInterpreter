@@ -38,10 +38,10 @@ We then wipe the token from the input stream, starting the string at a new chara
 */
 Data gettoken(char** progstring) {
     if (!len(*progstring)) {
-        Data reterror;
-        reterror.tag = STR; // doesn't really make sense?
-        reterror.val.string = NULL;
-        return reterror;         //Leave early if no program left
+        Data ret;
+        ret.tag = SP;
+        ret.val.integer = 0;
+        return ret;        //Leave early if no program left
     }
 
     char* start = *progstring;                  //Begin the things
@@ -59,6 +59,8 @@ Data gettoken(char** progstring) {
             if(*start == '}')brackets--;
             start++;
         }
+        dataret.tag = SP;
+        dataret.val.integer = 1;
     } else if (isnumeric(*start)) {             //Check for int literals
         dataret.tag = INT;
         dataret.val.integer = 0;
@@ -247,6 +249,11 @@ void processlexeme(Node** stack, char lex) {
             break;
         case '.':           //print as numbers
             write(stack);
+            break;
+        
+        /* Debug functions */
+        case 'S':           //print working stackS
+            debugprint(stack);
             break;
     }
 }
