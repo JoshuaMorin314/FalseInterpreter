@@ -5,14 +5,14 @@
 
 // creates an empty stack
 Node** create_stack(){
-    Node** stack=(Node**)malloc(sizeof(Node**));
+    Node** stack=(Node**)malloc(sizeof(Node*));
     *stack=NULL;
     return stack;
 }
 
 // creates a new Linked List node
 Node* create_node(Data value){
-    Node* node=(Node*)malloc(sizeof(Node*));
+    Node* node=(Node*)malloc(sizeof(Node));
     node->value=value;
     node->next=NULL;
     return node;
@@ -58,7 +58,7 @@ Data peek(Node** stack){
 void print_stack(Node** stack){
     Node* current=*stack;
     if(current==NULL) {
-        printf("NULL");
+        printf("NULL\n");
         return;
     }
     printf("{Top -> ");

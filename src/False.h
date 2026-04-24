@@ -37,4 +37,7 @@ extern void read(Node** stack);              // '^' reads a character from user 
 extern void emit(Node** stack);              // ',' writes the top of the stack to the console as a character (destructive)
 extern void write(Node** stack);             // '.' writes the top of the stack to the console as a decimal integer (destructive)
 
+// Debug commands
+extern void debugprint(Node** stack);        // 'S' simply prints out the current working stack.
+
 #endif // FALSE_H
