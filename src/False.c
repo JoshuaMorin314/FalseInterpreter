@@ -49,7 +49,7 @@ void pick(Node** stack) {
 void add(Node** stack) {
     Data a=pop(stack);
     Data b=pop(stack);
-    Data* ret=(Data*)malloc(sizeof(Data*));
+    Data* ret=(Data*)malloc(sizeof(Data));
     if(a.tag==INT && b.tag==INT){
         ret->val.integer=a.val.integer+b.val.integer;
         ret->tag=INT;
@@ -60,7 +60,7 @@ void add(Node** stack) {
 void subtract(Node** stack){
     Data a=pop(stack);
     Data b=pop(stack);
-    Data* ret=(Data*)malloc(sizeof(Data*));
+    Data* ret=(Data*)malloc(sizeof(Data));
     if(a.tag==INT && b.tag==INT){
         ret->val.integer=b.val.integer-a.val.integer;
         ret->tag=INT;
@@ -71,7 +71,7 @@ void subtract(Node** stack){
 void multiply(Node** stack){
     Data a=pop(stack);
     Data b=pop(stack);
-    Data* ret=(Data*)malloc(sizeof(Data*));
+    Data* ret=(Data*)malloc(sizeof(Data));
     if(a.tag==INT && b.tag==INT){
         ret->val.integer=a.val.integer*b.val.integer;
         ret->tag=INT;
@@ -82,7 +82,7 @@ void multiply(Node** stack){
 void divide(Node** stack){
     Data a=pop(stack);
     Data b=pop(stack);
-    Data* ret=(Data*)malloc(sizeof(Data*));
+    Data* ret=(Data*)malloc(sizeof(Data));
     if(a.tag==INT && b.tag==INT){
         ret->val.integer=b.val.integer/a.val.integer;
         ret->tag=INT;
@@ -93,7 +93,7 @@ void divide(Node** stack){
 /* Logical */
 void negate(Node** stack){
     Data a=pop(stack);
-    Data* ret=(Data*)malloc(sizeof(Data*));
+    Data* ret=(Data*)malloc(sizeof(Data));
     if(a.tag==INT){
         ret->val.integer=-1*a.val.integer;
         ret->tag=INT;
@@ -104,7 +104,7 @@ void negate(Node** stack){
 void and(Node** stack){
     Data a=pop(stack);
     Data b=pop(stack);
-    Data* ret=(Data*)malloc(sizeof(Data*));
+    Data* ret=(Data*)malloc(sizeof(Data));
     if(a.tag==INT && b.tag==INT){
         ret->val.integer=a.val.integer&b.val.integer;
         ret->tag=INT;
@@ -115,7 +115,7 @@ void and(Node** stack){
 void or(Node** stack){
     Data a=pop(stack);
     Data b=pop(stack);
-    Data* ret=(Data*)malloc(sizeof(Data*));
+    Data* ret=(Data*)malloc(sizeof(Data));
     if(a.tag==INT && b.tag==INT){
         ret->val.integer=a.val.integer|b.val.integer;
         ret->tag=INT;
@@ -125,7 +125,7 @@ void or(Node** stack){
 
 void not(Node** stack){
     Data a=pop(stack);
-    Data* ret=(Data*)malloc(sizeof(Data*));
+    Data* ret=(Data*)malloc(sizeof(Data));
     if(a.tag==INT){
         ret->val.integer=~a.val.integer;
         ret->tag=INT;
@@ -136,7 +136,7 @@ void not(Node** stack){
 void greater(Node** stack){
     Data a=pop(stack);
     Data b=pop(stack);
-    Data* ret=(Data*)malloc(sizeof(Data*));
+    Data* ret=(Data*)malloc(sizeof(Data));
     if(a.tag==INT && b.tag==INT){
         ret->val.integer=(b.val.integer>a.val.integer)?-1:0;
         ret->tag=INT;
@@ -147,7 +147,7 @@ void greater(Node** stack){
 void equal(Node** stack){
     Data a=pop(stack);
     Data b=pop(stack);
-    Data* ret=(Data*)malloc(sizeof(Data*));
+    Data* ret=(Data*)malloc(sizeof(Data));
     if(a.tag==INT && b.tag==INT){
         ret->val.integer=(b.val.integer==a.val.integer)?-1:0;
         ret->tag=INT;
@@ -184,11 +184,14 @@ void fetch(Node** stack){
 void execute(Node** stack,char* str){
     char** at=&str;
     Data token=gettoken(at);
-    while(!(token.tag==STR && token.val.string==NULL)){ // until the string has been completely consumed
+    while(!(token.tag==SP && token.val.integer==0)){ // until the string has been completely consumed
         if(token.tag==OP){ // if token is an operation
             processlexeme(stack,token.val.character); // execute based on value
         }else if(token.tag==STR){ // if token is an string (not including functions)
             printf("%s",token.val.string); // print the string
+        }else if(token.tag==SP){  // SP values should only ever be 1 coming in to here (meaning comment found)
+            token=gettoken(at);   // Grab our next token before continuing
+            continue; 
         }else{ // if token is an integer, function string, or variable name
             push(stack,token); // add the stack
         }
@@ -308,4 +311,11 @@ void write(Node** stack){
         // case OP: // shouldn't be possible
         // default: // shouldn't be possible
     }
+}
+
+/* Debug */
+// Extra feature not located in base FALSE.
+// Simply prints out the entire working stack
+void debugprint(Node** stack) {
+    print_stack(stack);
 }
