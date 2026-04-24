@@ -16,12 +16,12 @@ extern void multiply(Node** stack);          // '*'  multiplies the top two elem
 extern void divide(Node** stack);            // '/'  divides the second to top stack element by the top element on the stack (destructive)
 
 //Logical
-extern void negate(struct Node**);           // '_'  flip the sign of top element on the stack (destructive)
-extern void and(struct Node**);              // '&'  bitwise and on the top two elements on the stack (destructive)
-extern void or(struct Node**);               // '|'  bitwise or on the top two elements on the stack (destructive)
-extern void not(struct Node**);              // '~'  bitwise not on the top two elements on the stack (destructive)
-extern void greater(struct Node**);          // '>'  pushes -1 on top the stack if the second from top stack element is greater than the top stack element otherwise pushes 0 (destructive)
-extern void equal(struct Node**);            // '='  pushes -1 on top the stack if the second from top stack element is equal to the top stack element otherwise pushes 0 (destructive)
+extern void negate(Node**);                  // '_'  flip the sign of top element on the stack (destructive)
+extern void and(Node**);                     // '&'  bitwise and on the top two elements on the stack (destructive)
+extern void or(Node**);                      // '|'  bitwise or on the top two elements on the stack (destructive)
+extern void not(Node**);                     // '~'  bitwise not on the top two elements on the stack (destructive)
+extern void greater(Node**);                 // '>'  pushes -1 on top the stack if the second from top stack element is greater than the top stack element otherwise pushes 0 (destructive)
+extern void equal(Node**);                   // '='  pushes -1 on top the stack if the second from top stack element is equal to the top stack element otherwise pushes 0 (destructive)
 
 //Variables
 extern void store(Node** stack);             // ':'  stores the value of the variable specified by the top element on the stack

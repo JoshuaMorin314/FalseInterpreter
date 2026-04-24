@@ -256,26 +256,13 @@ void loop(Node** stack) {
 
 /* I/O Controls */
 void read(Node** stack){
-    /*  
-      False only accepts one character at a time but scanf accepts an entire line and won't terminate until the user presses enter.  
-      It is possible to accept only one character at a time and then auto terminate in C but the solution is varies 
-        depending on the operating system the machine is running.
-      This doesn't NEED to be solved but leaving it unaddressed causes it to be impossible to write a False program that accepts 
-        normal user input.
-      For example, to enter "hello" a user would need to type:
-      h
-      e
-      l
-      l
-      o
-      
-      instead of:
-      hello
-
-      fixing this would make for a more pleasant user experience so it is worth taking a look at in the future.
-      */
+    /* 
+    NOTE: waits until enter is pressed to read any input
+    then reads from the buffer until the whole input gets consumed 
+    before looking for more input
+    */
     char c='\0';
-    scanf(" %c",&c);
+    scanf("%c",&c);
     Data* ret=(Data*)malloc(sizeof(Data));
     ret->val.integer=(int)(c);
     ret->tag=INT;
